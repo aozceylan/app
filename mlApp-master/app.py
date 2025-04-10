@@ -469,34 +469,71 @@ for key, label in components.items():
 # Hauptbereich
 
 # Funktion definiert von welchem Ort Datein importiert werden können
+
 def liste_dateien():
     dateien = []
-    pfad = '/app/data'
-    for datei in os.listdir(pfad):
-        if os.path.isfile(os.path.join(pfad,datei)):
-            dateien.append(datei)
-    return dateien              
+    try:
+        # Önce standart Streamlit Cloud yolunu deneyin
+        pfad = '/app/data'
+        if os.path.exists(pfad):
+            for datei in os.listdir(pfad):
+                if os.path.isfile(os.path.join(pfad, datei)):
+                    dateien.append(datei)
+        else:
+            # Alternatif olarak, çalıştığınız dizini kontrol edin
+            pfad = os.path.dirname(os.path.abspath(__file__))
+            data_path = os.path.join(pfad, 'data')
+            if os.path.exists(data_path):
+                for datei in os.listdir(data_path):
+                    if os.path.isfile(os.path.join(data_path, datei)):
+                        dateien.append(datei)
+            else:
+                # Hiçbir yol bulunamazsa, uygulamanın içinde örnek veri oluşturun
+                # Burada kullanabileceğiniz örnek veri setlerini listeleyebilirsiniz
+                dateien = ["örnek_veri.csv", "iris.csv", "diabetes.csv"]
+    except Exception as e:
+        st.error(f"Dosya listesi oluşturulurken hata: {e}")
+        # Varsayılan örnek veri setlerini sunun
+        dateien = ["örnek_veri.csv", "iris.csv", "diabetes.csv"]
+    
+    return dateien
+     
     
 # 1. Daten importieren
+
+# 1. Daten importieren bölümünde de şu değişiklikleri yapın:
 if st.session_state.active_components["data_import"]:
     st.header("1. Daten importieren")
     
-    #HIER NOCH EIN BILD EINFÜGEN 
-    #ODER EINE BESCHREIBUNG DER UNTERSCHIEDLICHEN DATENSÄTZE
+    # Dosya seçim bölümünü güncelleme
+    st.info("Veri yükleme modu: Dosya seçimi veya örnek veri")
     
-    # Dateien zur Auswahl anbieten dockerized
-    dateien = liste_dateien()
-    datei_name = st.selectbox("Wähle eine Datei", dateien)
+    mode = st.radio("Veri kaynağı seçin", ["Örnek veri kullan", "CSV dosyası yükle"])
     
-    if datei_name is not None:
-        pfad = '/app/data'
-        print("bin am zweiten pfad vorbeigekommen")
-        datei_pfad = os.path.join(pfad, datei_name)
-        df= pd.read_csv(datei_pfad)
-
-
-        st.session_state.data = df
-        st.rerun()
+    if mode == "Örnek veri kullan":
+        # Örnek veri setleri
+        sample_data = {
+            "Iris Çiçek Verisi": pd.read_csv("https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv"),
+            "Şeker Hastalığı Verisi": pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/diabetes.csv"),
+            "Titanic Verisi": pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/titanic.csv")
+        }
+        
+        sample_choice = st.selectbox("Örnek veri setini seçin", list(sample_data.keys()))
+        
+        if st.button("Veriyi Yükle"):
+            st.session_state.data = sample_data[sample_choice]
+            st.success(f"{sample_choice} başarıyla yüklendi!")
+    else:
+        # CSV yükleme
+        uploaded_file = st.file_uploader("CSV dosyası yükle", type=["csv"])
+        
+        if uploaded_file is not None:
+            try:
+                df = pd.read_csv(uploaded_file)
+                st.session_state.data = df
+                st.success("Veri başarıyla yüklendi!")
+            except Exception as e:
+                st.error(f"Dosya yüklenirken hata oluştu: {e}")
     # Option zum Hochladen einer CSV-Datei ohne docker container
     #data_option = st.radio(
     #    "Datenquelle auswählen",
