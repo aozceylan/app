@@ -25,11 +25,21 @@ import plotly.express as px
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
 import os
-
-import os
-
+import base64
 
 st.set_page_config(page_title="ML Workflow", layout="wide")
+def get_base64_encoded_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+# HTML olarak logo görüntüleme
+def display_logo_html(base64_image, width=700):
+    html = f"""
+        <div style="text-align: center;">
+            <img src="data:image/png;base64,{base64_image}" alt="logo" width="{width}">
+        </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)
 
 # İlk önce is_home_page fonksiyonunu kullanmadan önce active_components değişkeninin
 # var olduğundan emin olmak için kontrol ekleyelim
@@ -375,10 +385,10 @@ def apply_custom_styling():
 apply_custom_styling()
 
 # Şimdi logoyu ekleyelim
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.image('images/logo1.png', width=700)
-st.title("ML Workflow")
+#col1, col2, col3 = st.columns([1, 2, 1])
+#with col2:
+ #   st.image('images/logo1.png', width=700)
+#st.title("ML Workflow")
 # Seitenkonfiguration
 #st.set_page_config(page_title="ML Workflow ", layout="wide")
 
@@ -1667,8 +1677,8 @@ else:
                                                                    
     
     # Beispiel-Workflow als Bild darstellen (optional)
-    col1, col2, col3 = st.columns([1, 3, 1])
-    with col2:
-     st.image('images/logo.png', use_container_width=True)
+    #col1, col2, col3 = st.columns([1, 3, 1])
+    #with col2:
+     #st.image('images/logo.png', use_container_width=True)
      #        caption="Beispiel eines ML-Workflows in Orange (Platzhalterbild)")    
      
