@@ -388,7 +388,7 @@ MAIN_LOGO_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAEYQAAAXSCAYAAAC201zhAAAAAXNSR0IArs4c
 # Şimdi logoyu ekleyelim - Base64 kullanarak
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    display_logo_html(HEADER_LOGO_BASE64, width=700)
+    display_logo_html(MAIN_LOGO_BASE64, width=700)
 # Seitenkonfiguration
 #st.set_page_config(page_title="ML Workflow ", layout="wide")
 
@@ -1679,5 +1679,5 @@ else:
     # Beispiel-Workflow als Bild darstellen (optional)
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-     display_logo_html(MAIN_LOGO_BASE64, width=700)
+     display_logo_html(HEADER_LOGO_BASE64, width=700)
      
