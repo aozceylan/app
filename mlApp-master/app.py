@@ -50,7 +50,7 @@ def display_logo_html(base64_image, width=700):
         </div>
     """
     st.markdown(html, unsafe_allow_html=True)
-    )
+    
 def is_home_page():
     # Eğer hiçbir component aktif değilse veya sadece ana sayfa aktifse
     return not any(st.session_state.active_components.values()) or (
