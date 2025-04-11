@@ -485,18 +485,24 @@ if st.session_state.active_components["data_import"]:
     #ODER EINE BESCHREIBUNG DER UNTERSCHIEDLICHEN DATENSÄTZE
     
     # Dateien zur Auswahl anbieten dockerized
-    dateien = liste_dateien()
-    datei_name = st.selectbox("Wähle eine Datei", dateien)
-    
-    if datei_name is not None:
-        pfad = '/app/data'
-        print("bin am zweiten pfad vorbeigekommen")
-        datei_pfad = os.path.join(pfad, datei_name)
-        df= pd.read_csv(datei_pfad)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+# Path to the datasets folder relative to your app.py
+datasets_dir = os.path.join(current_dir, "datasets")
 
+def liste_dateien():
+    try:
+        return [datei for datei in os.listdir(datasets_dir)]
+    except FileNotFoundError:
+        print(f"Error: Could not find directory {datasets_dir}")
+        return []
 
-        st.session_state.data = df
-        st.rerun()
+# Then use the relative path when reading files
+datei_name = st.selectbox("Wähle eine Datei", dateien)
+if datei_name is not None:
+    datei_pfad = os.path.join(datasets_dir, datei_name)
+    df = pd.read_csv(datei_pfad)
+    st.session_state.data = df
+    st.rerun()
     # Option zum Hochladen einer CSV-Datei ohne docker container
     #data_option = st.radio(
     #    "Datenquelle auswählen",
