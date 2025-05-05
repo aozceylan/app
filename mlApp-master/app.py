@@ -375,7 +375,8 @@ apply_custom_styling()
 # Şimdi logoyu ekleyelim
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.image('images/logo1.png', width=700)
+    image_path = os.path.join(os.path.dirname(__file__), "images", "logo1.png")
+    st.image(image_path)
 st.title("ML Workflow")
 # Seitenkonfiguration
 #st.set_page_config(page_title="ML Workflow ", layout="wide")
@@ -1648,6 +1649,7 @@ else:
     # Beispiel-Workflow als Bild darstellen (optional)
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-     st.image('images/logo.png', use_container_width=True)
+     image_path = os.path.join(os.path.dirname(__file__), "images", "logo.png")
+     st.image(image_path)
      #        caption="Beispiel eines ML-Workflows in Orange (Platzhalterbild)")    
      
