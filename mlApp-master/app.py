@@ -455,19 +455,19 @@ for key, label in components.items():
         activate_component(key)
 
 # Hauptbereich
-
-# Ordnerstruktur im Container anlegen
-pfad = '/app/datensätze'
-
-if not os.path.exists(pfad):
-    os.makedirs(pfad)
-
-def speichere_datei(datei, pfad):
-    with open(os.path.join(pfad, datei.name), 'r') as f:
-        f.write(datei.getbuffer())
-       
-    
 # 1. Daten importieren
+if st.session_state.active_components["data_import"]:
+    st.header("1. Daten importieren")
+    st.markdown("""
+    ### Datensatz-Beschreibung
+    
+    * **Atmo (low, medium, high)** - mit Umgebungsgeräuschen
+    * **Whitenoise** - mit weißem Rauschen überlagert
+    * **Talking** - Menschen reden in der Nähe
+    * **Stress** - hohe Belastung und Lautstärke
+    * **Combined** - alles zusammen
+    * **Pure** - nur die Motorgeräusche ohne Störungen
+    """)
 if st.session_state.active_components["data_import"]:
     st.header("1. Daten importieren")
     
@@ -480,11 +480,9 @@ if st.session_state.active_components["data_import"]:
     if data_option == "CSV-Datei hochladen":
         uploaded_file = st.file_uploader("Wählen Sie eine CSV-Datei", type="csv")
         if uploaded_file is not None:
-            speichere_datei(uploaded_file, pfad)
+            st.session_state.data = pd.read_csv(uploaded_file)
             st.success("Daten erfolgreich geladen!")
             # Nach erfolgreicher Datenladung automatisch zum nächsten Schritt
-            df = pd.read_csv(os.path.join(pfad, uploaded_file.name))
-            st.session_state.data = df
             st.rerun()
         
     # Zeige die Daten an, wenn sie geladen sind
